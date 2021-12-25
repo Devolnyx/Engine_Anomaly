@@ -1,10 +1,11 @@
 .header {
-  background-color: #323232;
+  background-color: rgba(100,149,237,0.25);
   margin: 0px;
   height: 46px;
   vertical-align: middle;
   display: flex;
   overflow: clip;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
 body {
@@ -27,4 +28,9 @@ body {
   display: inline-block;
   height: 100%;
   vertical-align: middle;
+}
+
+.main-svg {
+border-radius: 15px;
+box-shadow: 0 0 7px rgba(0,0,0,0.2);
 }
