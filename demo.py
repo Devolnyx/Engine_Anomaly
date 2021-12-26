@@ -25,16 +25,20 @@ outer_path = './data/outer_fault/'
 
 
 
-model = models.load_model('model/')
+#model = models.load_model('model_underhang/') #1
+model = models.load_model('model_sound/') #7
+#model = models.load_model('model/') #4
 
 def load_data(path):
     data = pd.read_csv(path, header = None)
-    data = np.array(data[4]).reshape(-1, 1000)
+    data = np.array(data[7]).reshape(-1, 1000)
     return data
 
 def plot_data(true, pred, label):
 
-    errors = abs(pd.DataFrame(true) - pd.DataFrame(pred)).mean()
+    errors = abs(pd.DataFrame(true) - pd.DataFrame(pred)).mean(axis=1)
+    error_counts = errors.round(3).value_counts()
+    error_counts = ((error_counts // 5) * 5).to_dict()
     true = np.array(true).flatten()
     pred = np.array(pred).flatten()
 
@@ -42,7 +46,8 @@ def plot_data(true, pred, label):
                   'Skewness': errors.skew(),
                   'IQR': errors.quantile(.75) - errors.quantile(.25),
                   'Mean': errors.mean(),
-                  'Median': errors.median()
+                  'Median': errors.median(),
+                  '90th Perc.': errors.quantile(.9),
                   }
 
     fig = make_subplots(rows=2, cols=2, shared_xaxes=True, vertical_spacing=0.07, row_width=[0.2, 0.3],
@@ -52,13 +57,21 @@ def plot_data(true, pred, label):
     fig.add_trace(go.Scatter(y=pred, mode='lines', line=dict(color='salmon', width=2), name='Выходные данные'),
                   row=1, col=1)
 
-    fig.add_trace(go.Histogram(x=errors, name='Распределение ошибок'),
-                  row=2, col=1),
+    #fig.add_trace(go.Histogram(x=errors, name='Распределение ошибок'),row=2, col=1),
+    fig.add_trace(
+        go.Bar(x=list(error_counts), y=list(error_counts.values()), name='Стат. показатели ошибок', orientation='v'),
+        row=2, col=1)
+
     fig.add_trace(
         go.Bar(y=list(statistics), x=list(statistics.values()), name='Стат. показатели ошибок', orientation='h'),
         row=2, col=2)
 
     fig.update_layout(height=900,
+                      yaxis=dict(range=[-1, 1]),
+                      yaxis2=dict(range=[0, 40]),
+                      xaxis2=dict(range=[0,.25]),
+                      xaxis3=dict(range=[0,.5]),
+
                       paper_bgcolor="rgba(100,149,237,0.05)",
                       title_text=label,
                       title={'font': {'size': 20}},
@@ -78,11 +91,11 @@ def plot_data(true, pred, label):
 body = dbc.Container([
         html.Br(),
         dbc.Row([
-            dbc.Col([dcc.Graph(id='normal_engine', animate=False),
+            dbc.Col([dcc.Graph(id='normal_engine', animate=True, animation_options=dict(traces = [0])),
             html.Button('Исправный', className="btn btn-lg btn-secondary", id='btn1', n_clicks=0,
                         style={'margin': '14px', 'background-color': "rgba(100,149,237,0.1))", 'box-shadow': '0 0 5px rgba(0,0,0,0.5)'}),
             ]),
-            dbc.Col([dcc.Graph(id='fault_engine', animate=False),
+            dbc.Col([dcc.Graph(id='fault_engine', animate=True, animation_options=dict(traces = [0,1])),
             html.Button('Неисправный', className="btn btn-lg btn-secondary", id='btn2', n_clicks=0,
                         style={'margin': '14px', 'background-color': "rgba(100,149,237,0.1))", 'box-shadow': '0 0 5px rgba(0,0,0,0.5)'}),
             ]),
