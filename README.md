@@ -1,6 +1,6 @@
 ## Exploring engine telemetry dataset
 
-Use the tensorflow autoencoder trained on the normal (non-fault) engine data, visualize (Dash) decode errors for various faults.
+Use the tensorflow autoencoder trained on the normal (non-fault) engine data, visualize (Dash) decode errors for various types of the engine faults.
 
 ### The datasets:
 http://www02.smt.ufrj.br/~offshore/mfs/page_01.html
@@ -12,7 +12,7 @@ http://www02.smt.ufrj.br/~offshore/mfs/page_01.html
 python demo_sound.py
 ```
 
-![изображение](https://user-images.githubusercontent.com/86562899/160696164-5c59c524-e077-4253-a082-72f8823251d8.png)
+![sound_dash](https://user-images.githubusercontent.com/86562899/160699771-80ac6464-aa52-4648-abcc-aeb59bdfa824.gif)
 
 
 ### The noise dashboard:
@@ -21,4 +21,5 @@ python demo_sound.py
 ```sh
 python demo_underhang.py
 ```
-![изображение](https://user-images.githubusercontent.com/86562899/160696513-34118896-a474-4896-9de4-ab1e48651a8c.png)
+
+![underhang_dash](https://user-images.githubusercontent.com/86562899/160699818-ec5d59fe-e06f-46e9-a1d1-da1de3317366.gif)
